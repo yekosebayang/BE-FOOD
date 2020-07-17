@@ -63,9 +63,10 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public Product editProductById(Product product, int productId) {
 		product.setId(productId);
-		Optional<Product> findProduct = productRepo.findById(productId);
+		Product findProduct = productRepo.findById(productId).get();
+		product.setProductimage(findProduct.getProductimage());
 		if (findProduct.toString() == "Optional.empty")
-			throw new RuntimeException("Id not exist, ID: " + productId);
+			throw new RuntimeException("Produk belum terdaftar, ID: " + productId);
 		return productRepo.save(product);
 	}
 
@@ -86,11 +87,17 @@ public class ProductServiceImpl implements ProductService {
 	public String uploadPict(MultipartFile file, int productId) {
 		Product product = productRepo.findById(productId).get();
 		Date date = new Date();
+
+		if (file.isEmpty()) {
+//		if (file == null) {
+			productRepo.save(product);
+			return product.getProductimage();
+		}
 		
 		String fileExtension = file.getContentType().split("/")[1];
 		String fileName = "PRODPIC-" + productId + "-" + product.getProductname() + "-" + date.getTime() + "." + fileExtension;
 		
-		System.out.println(fileExtension);
+//		System.out.println(fileExtension);
 		
 		String newFileName = StringUtils.cleanPath(fileName);
 		Path path = Paths.get(StringUtils.cleanPath(uploadPath) + newFileName);
@@ -121,7 +128,7 @@ public class ProductServiceImpl implements ProductService {
 			e.printStackTrace();
 		}
 		
-		System.out.println("DOWNLOAD");
+//		System.out.println("DOWNLOAD");
 		return ResponseEntity.ok().contentType(MediaType.parseMediaType("application/octet-stream"))
 				.header(HttpHeaders.CONTENT_DISPOSITION, 
 				"attachment: filename=\"" + resource.getFilename() + "\"").body(resource);
@@ -138,5 +145,14 @@ public class ProductServiceImpl implements ProductService {
 
 		findProduct.getCategory().remove(findCategory);
 		return productRepo.save(findProduct);
+	}
+
+	
+	@Override
+	public void deleteProductbyId(int productId) {
+		Product findProduct = productRepo.findById(productId).get();
+		findProduct.setCategory(null);
+		productRepo.save(findProduct);
+		productRepo.deleteById(productId);
 	}	
 }

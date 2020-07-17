@@ -24,4 +24,6 @@ public interface ProductService {
 
 	Product deleteCategoryInProduct(int productId, int cateId);
 
+	void deleteProductbyId(int productId);
+
 }

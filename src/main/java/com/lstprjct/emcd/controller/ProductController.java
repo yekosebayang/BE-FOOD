@@ -68,10 +68,10 @@ public class ProductController {
 		return productService.deleteCategoryInProduct(productId, cateId);
 	}
 	
-//	@DeleteMapping("/{movieId}")
-//	public void deleteProductbyId(@PathVariable int productId) {
-//		ProductService.deleteProductbyId(productId);
-//	}
-//	
+	@DeleteMapping("/{productId}")
+	public void deleteProductbyId(@PathVariable int productId) {
+		productService.deleteProductbyId(productId);
+	}
+	
 		
 }
