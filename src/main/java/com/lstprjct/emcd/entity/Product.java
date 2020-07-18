@@ -27,7 +27,7 @@ public class Product {
 	private String productimage;
 	private String productdesc;
 	
-	@ManyToMany(fetch = FetchType.EAGER, cascade = {
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {
 			CascadeType.DETACH,
 			CascadeType.PERSIST,
 			CascadeType.REFRESH	})
@@ -39,6 +39,10 @@ public class Product {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Cart> carts;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<TransactionDetail> transactionDetails;
 
 	public int getId() {
 		return id;
@@ -86,6 +90,22 @@ public class Product {
 
 	public void setCategory(List<Category> category) {
 		this.category = category;
+	}
+
+	public List<Cart> getCarts() {
+		return carts;
+	}
+
+	public void setCarts(List<Cart> carts) {
+		this.carts = carts;
+	}
+
+	public List<TransactionDetail> getTransactionDetails() {
+		return transactionDetails;
+	}
+
+	public void setTransactionDetails(List<TransactionDetail> transactionDetails) {
+		this.transactionDetails = transactionDetails;
 	}
 
 	

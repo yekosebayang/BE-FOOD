@@ -88,8 +88,8 @@ public class ProductServiceImpl implements ProductService {
 		Product product = productRepo.findById(productId).get();
 		Date date = new Date();
 
-		if (file.isEmpty()) {
-//		if (file == null) {
+//		if (file.isEmpty()) {
+		if(!file.equals(null)) {
 			productRepo.save(product);
 			return product.getProductimage();
 		}
