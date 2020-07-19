@@ -25,6 +25,7 @@ public class Product {
 	private String productname;
 	private int productprice;
 	private int productsold;
+	private int productstock;
 	private String productimage;
 	private String productdesc;
 	
@@ -44,6 +45,11 @@ public class Product {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<TransactionDetail> transactionDetails;
+	
+	@ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.DETACH, CascadeType.PERSIST,CascadeType.REFRESH })
+    @JoinTable(name = "product_paket", joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "paket_id"))
+    private List<Paket> paket;
 
 	public int getId() {
 		return id;
@@ -67,6 +73,22 @@ public class Product {
 
 	public void setProductprice(int productprice) {
 		this.productprice = productprice;
+	}
+
+	public int getProductsold() {
+		return productsold;
+	}
+
+	public void setProductsold(int productsold) {
+		this.productsold = productsold;
+	}
+
+	public int getProductstock() {
+		return productstock;
+	}
+
+	public void setProductstock(int productstock) {
+		this.productstock = productstock;
 	}
 
 	public String getProductimage() {
@@ -109,12 +131,12 @@ public class Product {
 		this.transactionDetails = transactionDetails;
 	}
 
-	public int getProductsold() {
-		return productsold;
+	public List<Paket> getPaket() {
+		return paket;
 	}
 
-	public void setProductsold(int productsold) {
-		this.productsold = productsold;
+	public void setPaket(List<Paket> paket) {
+		this.paket = paket;
 	}
 
 	

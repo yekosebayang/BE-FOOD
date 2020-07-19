@@ -21,8 +21,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 
 import com.lstprjct.emcd.dao.CategoryRepo;
+import com.lstprjct.emcd.dao.PaketRepo;
 import com.lstprjct.emcd.dao.ProductRepo;
 import com.lstprjct.emcd.entity.Category;
+import com.lstprjct.emcd.entity.Paket;
 import com.lstprjct.emcd.entity.Product;
 import com.lstprjct.emcd.service.ProductService;
 
@@ -32,6 +34,8 @@ public class ProductServiceImpl implements ProductService {
 	private ProductRepo productRepo;
 	@Autowired
 	private CategoryRepo categoryRepo;
+	@Autowired
+	private PaketRepo paketRepo;
 	private String uploadPath = System.getProperty("user.dir") + 
 			"\\src\\main\\resources\\static\\images\\";
 
@@ -147,7 +151,6 @@ public class ProductServiceImpl implements ProductService {
 		return productRepo.save(findProduct);
 	}
 
-	
 	@Override
 	public void deleteProductbyId(int productId) {
 		Product findProduct = productRepo.findById(productId).get();
@@ -160,6 +163,28 @@ public class ProductServiceImpl implements ProductService {
 	public Product editSoldProductById(int productId, int qty) {
 		Product findProduct = productRepo.findById(productId).get();
 		findProduct.setProductsold(findProduct.getProductsold() + qty);
+		return productRepo.save(findProduct);
+	}
+
+	@Override
+	public Product addPaketToProduct(int productId, int paketId) {
+		Product findProduct = productRepo.findById(productId).get();
+		Paket findPaket = paketRepo.findById(paketId).get();
+			
+		findProduct.getPaket().add(findPaket);
+		return productRepo.save(findProduct);
+	}
+
+	@Override
+	public Product deletepaketInProduct(int productId, int paketId) {
+		Product findProduct = productRepo.findById(productId).get();
+		Paket findPaket = paketRepo.findById(paketId).get();
+		
+		if (!findProduct.getPaket().contains(findPaket)) {
+			throw new RuntimeException("Paket "+ findPaket.getPaketname() +" belum terdaftar!");
+		}
+
+		findProduct.getPaket().remove(findPaket);
 		return productRepo.save(findProduct);
 	}
 }

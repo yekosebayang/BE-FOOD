@@ -28,4 +28,8 @@ public interface ProductService {
 
 	Product editSoldProductById(int productId, int qty);
 
+	Product addPaketToProduct(int productId, int paketId);
+
+	Product deletepaketInProduct(int productId, int paketId);
+
 }

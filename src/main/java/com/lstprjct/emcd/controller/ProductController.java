@@ -78,5 +78,14 @@ public class ProductController {
 		return productService.editSoldProductById(productId, qty);
 	}
 	
+	@PostMapping("{productId}/paket/{paketId}")
+	public Product addPaketToProduct(@PathVariable int productId, @PathVariable int paketId) {
+		return productService.addPaketToProduct(productId, paketId);
+	}
+	
+	@DeleteMapping("{productId}/paket/{paketId}")
+	public Product deletePaketInProduct(@PathVariable int productId, @PathVariable int paketId) {
+		return productService.deletepaketInProduct(productId, paketId);
+	}
 		
 }
