@@ -44,8 +44,8 @@ public class ProductController {
 	}
 	
 	@PutMapping("/edit/{productId}")
-	public Product editProductById(@RequestBody Product product, @PathVariable int productId) {
-		return productService.editProductById(product, productId);
+	public Product editImageProductById(@RequestBody Product product, @PathVariable int productId) {
+		return productService.editImageProductById(product, productId);
 	}
 	
 	@PostMapping("{productId}/category/{cateId}")
@@ -71,6 +71,11 @@ public class ProductController {
 	@DeleteMapping("/{productId}")
 	public void deleteProductbyId(@PathVariable int productId) {
 		productService.deleteProductbyId(productId);
+	}
+	
+	@PutMapping("/sold/{productId}/{qty}")
+	public Product editSoldProductById(@PathVariable int productId, @PathVariable int qty) {
+		return productService.editSoldProductById(productId, qty);
 	}
 	
 		

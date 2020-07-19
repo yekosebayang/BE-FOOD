@@ -24,6 +24,7 @@ public class Product {
 	private int id;
 	private String productname;
 	private int productprice;
+	private int productsold;
 	private String productimage;
 	private String productdesc;
 	
@@ -106,6 +107,14 @@ public class Product {
 
 	public void setTransactionDetails(List<TransactionDetail> transactionDetails) {
 		this.transactionDetails = transactionDetails;
+	}
+
+	public int getProductsold() {
+		return productsold;
+	}
+
+	public void setProductsold(int productsold) {
+		this.productsold = productsold;
 	}
 
 	

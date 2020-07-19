@@ -61,7 +61,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public Product editProductById(Product product, int productId) {
+	public Product editImageProductById(Product product, int productId) {
 		product.setId(productId);
 		Product findProduct = productRepo.findById(productId).get();
 		product.setProductimage(findProduct.getProductimage());
@@ -89,9 +89,9 @@ public class ProductServiceImpl implements ProductService {
 		Date date = new Date();
 
 //		if (file.isEmpty()) {
-		if(!file.equals(null)) {
+		if(file.equals(null)) {
 			productRepo.save(product);
-			return product.getProductimage();
+			return "Gagal ganti foto";
 		}
 		
 		String fileExtension = file.getContentType().split("/")[1];
@@ -154,5 +154,12 @@ public class ProductServiceImpl implements ProductService {
 		findProduct.setCategory(null);
 		productRepo.save(findProduct);
 		productRepo.deleteById(productId);
-	}	
+	}
+
+	@Override
+	public Product editSoldProductById(int productId, int qty) {
+		Product findProduct = productRepo.findById(productId).get();
+		findProduct.setProductsold(findProduct.getProductsold() + qty);
+		return productRepo.save(findProduct);
+	}
 }

@@ -14,7 +14,7 @@ public interface ProductService {
 
 	Product readProductById(int productId);
 
-	Product editProductById(Product product, int productId);
+	Product editImageProductById(Product product, int productId);
 
 	Product addCategoryToProduct(int productId, int cateId);
 
@@ -25,5 +25,7 @@ public interface ProductService {
 	Product deleteCategoryInProduct(int productId, int cateId);
 
 	void deleteProductbyId(int productId);
+
+	Product editSoldProductById(int productId, int qty);
 
 }

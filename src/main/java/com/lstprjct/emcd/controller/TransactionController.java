@@ -38,7 +38,12 @@ public class TransactionController {
 	@Autowired
 	private TransactionRepo transactionRepo;
 	private String uploadPath = System.getProperty("user.dir") + 
-			"\\src\\main\\resources\\static\\bill\\";
+			"\\src\\main\\resources\\static\\images\\";
+	
+	@GetMapping("/all")
+	public Iterable<Transaction> getAllTransaction(){
+		return transactionRepo.findAll();
+	}
 	
 	@PostMapping("/new/{userId}")
 	public Transaction addNewTransaction(@RequestBody Transaction transaction, @PathVariable int userId) {
@@ -46,39 +51,63 @@ public class TransactionController {
 		User findUser = userRepo.findById(userId).get();
 		transaction.setUser(findUser);
 		transaction.setBuydate(date);
+		transaction.setTransactiontext("Lakukan pembayaran, agar pesanamu dapat di proses");
 		transaction.setPaydate(null);
 		return transactionRepo.save(transaction);
 	}
 	
 	@GetMapping("/user/{userId}")
-	@Transactional
 	private Iterable<Transaction> getTransactionByUserId(@PathVariable int userId) {
 		return transactionRepo.findByUserId(userId);
 	}
+
+	@PutMapping("/reject/{transId}/{rejectMsg}")
+    public Transaction rejectTransaction(@PathVariable int transId,@PathVariable String rejectMsg){
+        Transaction findTransaction = transactionRepo.findById(transId).get();
+        findTransaction.setStatus("belum");
+        findTransaction.setTransactiontext(rejectMsg);
+        return transactionRepo.save(findTransaction);
+    }
+	
+	@PutMapping("/acc/{transId}/{accMsg}")
+    public Transaction accTransaction(@PathVariable int transId,@PathVariable String accMsg){
+        Transaction findTransaction = transactionRepo.findById(transId).get();
+        findTransaction.setStatus("sudah");
+        findTransaction.setTransactiontext(accMsg);
+        return transactionRepo.save(findTransaction);
+    }
 	
 	@PutMapping("/payment/{transactionId}")
 	@Transactional
-	private Transaction uploadPayment(@RequestParam("file") MultipartFile file, @PathVariable int transactionId) {
+	private String uploadPayment(@RequestParam("file") MultipartFile file, @PathVariable int transactionId) {
 		
 		Transaction findTransaction = transactionRepo.findById(transactionId).get();
 		Date date = new Date();
-		if(!file.equals(null)) {
-			String fileExtension = file.getContentType().split("/")[1];
-			String fileName = "PAYMPIC-" + transactionId + "-"  + "-" + date.getTime() + "." + fileExtension;
-			String newFileName = StringUtils.cleanPath(fileName);
-			Path path = Paths.get(StringUtils.cleanPath(uploadPath) + newFileName);
-			try {
-				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/transaction/download/")
-					.path(fileName).toUriString();
-			findTransaction.setTransactionbill(fileDownloadUri);
-			findTransaction.setStatus("menunggu");
-			findTransaction.setTransactiontext("Butki bayar anda sudah diterima");
-			transactionRepo.save(findTransaction);
+		if(file.equals(null)) {
+			throw new RuntimeException("Foto kosong");
 		}
-		return findTransaction;
+		String fileExtension = file.getContentType().split("/")[1];
+		String fileName = "PAYMPIC-" + transactionId + "-" + date.getTime() + "." + fileExtension;
+		
+		String newFileName = StringUtils.cleanPath(fileName);
+		Path path = Paths.get(StringUtils.cleanPath(uploadPath) + newFileName);
+		
+		try {
+			Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/products/download/")
+				.path(fileName).toUriString();
+		
+		findTransaction.setTransactionbill(fileDownloadUri);
+		findTransaction.setStatus("menunggu");
+		findTransaction.setTransactiontext("Butki bayar anda sudah diterima");
+		transactionRepo.save(findTransaction);
+		return fileDownloadUri;
 	}
+	
+	
+	
 }
