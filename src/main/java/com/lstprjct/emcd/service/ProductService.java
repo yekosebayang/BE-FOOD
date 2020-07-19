@@ -32,4 +32,6 @@ public interface ProductService {
 
 	Product deletepaketInProduct(int productId, int paketId);
 
+	Product editStockProductById(int productId, int qty);
+
 }

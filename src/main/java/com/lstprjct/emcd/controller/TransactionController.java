@@ -55,7 +55,7 @@ public class TransactionController {
 		transaction.setPaydate(null);
 		return transactionRepo.save(transaction);
 	}
-	
+
 	@GetMapping("/user/{userId}")
 	private Iterable<Transaction> getTransactionByUserId(@PathVariable int userId) {
 		return transactionRepo.findByUserId(userId);
@@ -78,7 +78,6 @@ public class TransactionController {
     }
 	
 	@PutMapping("/payment/{transactionId}")
-	@Transactional
 	private String uploadPayment(@RequestParam("file") MultipartFile file, @PathVariable int transactionId) {
 		
 		Transaction findTransaction = transactionRepo.findById(transactionId).get();
@@ -107,6 +106,8 @@ public class TransactionController {
 		transactionRepo.save(findTransaction);
 		return fileDownloadUri;
 	}
+	
+	
 	
 	
 	

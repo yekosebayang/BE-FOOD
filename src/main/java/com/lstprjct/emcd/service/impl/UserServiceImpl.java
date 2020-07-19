@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public String editPasswordByToken(User user) {
 		User findUser = userRepo.findByToken(user.getToken()).get();
-		String encodedPassword = pwEncoder.encode(findUser.getPassword());
+		String encodedPassword = pwEncoder.encode(user.getPassword());
 		
 		findUser.setPassword(encodedPassword);
 		findUser.setToken(null);

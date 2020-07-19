@@ -187,4 +187,11 @@ public class ProductServiceImpl implements ProductService {
 		findProduct.getPaket().remove(findPaket);
 		return productRepo.save(findProduct);
 	}
+
+	@Override
+	public Product editStockProductById(int productId, int qty) {
+		Product findProduct = productRepo.findById(productId).get();
+		findProduct.setProductstock(findProduct.getProductstock() - qty);
+		return productRepo.save(findProduct);
+	}
 }
